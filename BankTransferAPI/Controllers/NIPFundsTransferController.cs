@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using BankTransferAPI.Repo;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
+using static BankTransferAPI.Models.Requests;
 
 namespace BankTransferAPI.Controllers
 {
@@ -7,10 +10,18 @@ namespace BankTransferAPI.Controllers
     [ApiController]
     public class NIPFundsTransferController : ControllerBase
     {
-        [HttpGet]
-        public IActionResult NIPTransfer()
+        private readonly IBankTransfer _bankTransfer;
+        public NIPFundsTransferController(IBankTransfer bankTransfer)
         {
-            return Ok();
+            _bankTransfer = bankTransfer;
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetBvnDetails(GetBvnDetailsRequest request)
+        {
+            var result = await _bankTransfer.GetBvnDetails(request);
+            return Ok(result);
+            
         }
     }
 }

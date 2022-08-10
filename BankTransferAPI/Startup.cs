@@ -10,6 +10,7 @@ using System.IO;
 
 using Microsoft.OpenApi.Models;
 using System;
+using BankTransferAPI.Repo;
 
 namespace BankTransferAPI
 {
@@ -27,7 +28,7 @@ namespace BankTransferAPI
         {
             services.AddDbContext<ApplicationDbContext>(
                 options => options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
-
+            services.AddSingleton<IBankTransfer, BankTransfer>();
 
             services.AddControllers();
 
@@ -37,7 +38,10 @@ namespace BankTransferAPI
             // Additional code to register the ILogger as a ILogger<T> where T is the Startup class
             services.AddSingleton(typeof(Microsoft.Extensions.Logging.ILogger), typeof(Logger<Startup>));
 
-            services.AddSwaggerGen();
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new OpenApiInfo { Title = "BankApi", Version = "v1" });
+            });
 
         }
 
@@ -49,16 +53,9 @@ namespace BankTransferAPI
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BankApi v1"));
             }
-            // Enable middleware to serve generated Swagger as a JSON endpoint.
-            app.UseSwagger();
-
-            // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.)
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/v1/swagger.json", "Bank API V1");
-                c.RoutePrefix = string.Empty;
-            });
+           
             app.UseHttpsRedirection();
 
             app.UseRouting();

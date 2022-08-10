@@ -20,11 +20,5 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Core\GenericRepository\" />
-    <Folder Include="Core\UnitOfWork\" />
-    <Folder Include="Core\Repository\" />
-  </ItemGroup>
-
 
 </Project>
